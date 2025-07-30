@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Information Dashboard</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      overflow: hidden;
+    }
+
+    /* Welcome Screen */
+    .welcome-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, #0077b6, #00b4d8);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      animation: fadeOut 1s ease forwards;
+      animation-delay: 3s;
+    }
+
+    .welcome-screen h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-screen p {
+      font-size: 20px;
+      opacity: 0.9;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    /* Dashboard Layout */
+    .container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 230px;
+      background: #023e8a;
+      color: white;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar button {
+      background: none;
+      border: none;
+      color: white;
+      text-align: left;
+      padding: 12px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sidebar button:hover,
+    .sidebar button.active {
+      background: #0077b6;
+      border-radius: 5px;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .section {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h3 {
+      color: #0077b6;
+      border-bottom: 2px solid #caf0f8;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin: 8px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      height: 20px;
+      background: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress {
+      background: #00b4d8;
+      height: 100%;
+      width: 70%;
+      color: white;
+      text-align: right;
+      padding-right: 8px;
+    }
+
+    .social-buttons a {
+      display: inline-block;
+      margin: 10px 15px 0 0;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .whatsapp {
+      background: #25d366;
+    }
+
+    .github {
+      background: #24292e;
+    }
+
+    .linkedin {
+      background: #0077b5;
+    }
+
+    .instagram {
+      background: #e1306c;
+    }
+
+    .facebook {
+      background: #1877f2;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #0077b6;
+      margin-bottom: 15px;
+    }
+
+    .introduction {
+      margin-top: 15px;
+      font-size: 16px;
+      color: #333;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .contact-info {
+      padding: 10px;
+      background: #e0f7fa;
+      border-radius: 8px;
+      max-width: 500px;
+    }
+
+    .contact-info h4 {
+      margin-bottom: 10px;
+    }
+
+    .contact-info a {
+      color: #0077b6;
+      text-decoration: none;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Welcome Screen -->
+  <div class="welcome-screen" id="welcome">
+    <h1>Welcome, Nikhil Singh!</h1>
+    <p>Loading your Dashboard...</p>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="container" id="dashboard" style="display: none;">
+    <div class="sidebar">
+      <h2>My Dashboard</h2>
+      <button onclick="showSection('profile')" class="active">👤 Profile</button>
+      <button onclick="showSection('subjects')">📚 Subjects</button>
+      <button onclick="showSection('progress')">📈 Progress</button>
+      <button onclick="showSection('skills')">🛠 Skills</button>
+      <button onclick="showSection('projects')">🚀 Projects</button>
+      <button onclick="showSection('achievements')">🏆 Achievements</button>
+      <button onclick="showSection('timetable')">📅 Timetable</button>
+      <button onclick="showSection('assignments')">📝 Assignments</button>
+      <button onclick="showSection('social')">🔗 Social</button>
+      <button onclick="showSection('contact')">☎️ Contact</button>
+      
+    </div>
+
+    <div class="main">
+      <div id="profile" class="section active">
+        <h3>👤 Profile</h3>
+        <img src="Nikhil Singh .jpg" alt="Profile Photo" class="profile-photo" />
+        <ul>
+          <li><strong>Name:</strong> Nikhil Singh</li>
+          <li><strong>Collage:</strong> SRM Institute Of Science And Technology</li>
+          <li><strong>Roll No:</strong> RA2311003020549</li>
+          <li><strong>Branch:</strong> Computer Science and Engineering</li>
+          <li><strong>Semester:</strong> 5th</li>
+        </ul>
+        <div class="introduction">
+          <strong>Introduction:</strong>
+          <p>I'm a passionate 3rd-year Computer Science B.Tech student focused on software development, AI, and machine learning. Always eager to learn new technologies and contribute to impactful projects.</p>
+        </div>
+      </div>
+
+      <div id="subjects" class="section">
+        <h3>📚 Subjects</h3>
+        <ul>
+          <li>Discrete Mathematics</li>
+          <li>Formal Language and Automata</li>
+          <li>Computer Networks</li>
+          <li>Machine Learning</li>
+          <li>Full Stack Web Development</li>
+          <li>Short Range Wireless Communication</li>
+        </ul>
+      </div>
+
+      <div id="timetable" class="section">
+        <h3>📅 Weekly Timetable</h3>
+        <table>
+          <tr><th>Day</th><th>8.00-8.50</th><th>8.50-9.40</th><th>9.40-9.50</th><th>9.50-10.40</th><th>10.40-11.30</th><th>11.30-12.20</th><th>12.20-1.10</th><th>1.10-2.00</th><th>2.00-2.50</th><th>2.50-3.40</th></tr>
+          <tr><th>Period</th><th>1</th><th>2</th><th>Break</th><th>3</th><th>4</th><th>Lunch</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+          <tr><td>Monday</td><td></td><td></td><td>-</td><td></td><td></td><td>-</td><td>DM</td><td>ML</td><td>FLA</td><td>CN</td></tr>
+          <tr><td>Tuesday</td><td>CN</td><td>SRWC</td><td>-</td><td>FLA</td><td>DM</td><td>-</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>Wednesday</td><td>ML</td><td>FSD</td><td>-</td><td>IAF</td><td>CN</td><td>-</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>Thursday</td><td>ALTS</td><td>ALTS</td><td>-</td><td>DM</td><td>SRWC</td><td>-</td><td>FSD</td><td></td><td></td><td></td></tr>
+          <tr><td>Friday</td><td>DM</td><td>SRWC</td><td>-</td><td>FSD</td><td>FLA</td><td>-</td><td>ML</td><td>ML</td><td>CN</td><td>CN</td></tr>
+        </table>
+      </div>
+
+      <div id="assignments" class="section">
+        <h3>📝 Assignments</h3>
+        <ul>
+          <li>FSD: PERSONAL Dashboard - DUE: Before CLA1</li>
+          <li>DM: Assignment 1 -DUE: 30.07.2025</li>
+          <li>CN: assignment 1 -DUE: 05.09.2025</li>
+        </ul>
+      </div>
+
+      <div id="progress" class="section">
+        <h3>📈 Progress</h3>
+        <p>Overall Semester Progress:</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 88.3%;">88.3%</div>
+        </div>
+        <p>Semester 1 Progress:</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 83.3%;">83.3%</div>
+        </div>
+        <p>Semester 2 Progress:</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 83.3%;">83.3%</div>
+        </div>
+        <p>Semester 3 Progress:</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 89.6%;">89.6%</div>
+        </div>
+        <p>Semester 4 Progress:</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 97%;">97%</div>
+        </div>
+        
+      </div>
+
+      <div id="skills" class="section">
+        <h3>🛠 Skills</h3>
+        <ul>
+          <li>Programming: C, C++, Python, Java</li>
+          <li>Web Development: HTML, CSS, JavaScript, React</li>
+          <li>Database: MySQL</li>
+          <li>Tools: Git, VS Code</li>
+          <li>Soft Skills: Communication, Teamwork</li>
+        </ul>
+      </div>
+
+      <div id="projects" class="section">
+        <h3>🚀 Projects</h3>
+        <ul>
+          <li><strong>Parking Lot Management System</strong> - Developed an easy based on penalty, attendance.</li>
+          <li><strong>School Management System</strong> - Designed and Developed an attendnce, fee and marks</li>
+          <li><strong>Personal Portfolio Website</strong> - Designed and deployed a responsive portfolio using React and CSS.</li>
+        </ul>
+      </div>
+
+      <div id="achievements" class="section">
+        <h3>🏆 Academic Achievements</h3>
+        <ul>
+          <li>NCC "A" Certificate</li>
+          <li>Participated in Hackathon</li>
+          <li>Part-time Work in Family Business</li>
+        </ul>
+      </div>
+
+      <div id="contact" class="section">
+        <h3>☎️ Contact Information</h3>
+        <div class="contact-info">
+          <p><strong>Phone:</strong> <a href="tel:+919025744221">+91 9025744221</a></p>
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/919025744221" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></p>
+          <p><strong>Email:</strong> <a href="mailto:nikhilsingh12102005@gmail.com">nikhilsingh12102005@gmail.com</a></p>
+        </div>
+      </div>
+
+      <div id="social" class="section">
+        <h3>🔗 Social Media Links</h3>
+        <div class="social-buttons">
+          <a href="https://wa.me/919025744221" class="whatsapp" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+          <a href="https://github.com/nikhilsingh12102005" class="github" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <a href="https://linkedin.com/in/nikhil-singh-858110272" class="linkedin" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+          <a href="https://instagram.com/nikhilrajput_1810" class="instagram" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-instagram"></i> Instagram
+          </a>
+          <a href="https://facebook.com/share/1QpwxTGiH6/" class="facebook" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-facebook"></i> Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll(".sidebar button").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+      event.target.classList.add("active");
+      document.getElementById(id).classList.add("active");
+    }
+
+    // Show dashboard after welcome screen
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById("welcome").style.display = "none";
+        document.getElementById("dashboard").style.display = "flex";
+        document.body.style.overflow = "auto";
+      }, 3000);
+    };
+  </script>
+</body>
+</html>
